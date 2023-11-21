@@ -1,0 +1,24 @@
+{
+  "resourceType": "Observation",
+  "id": "02a6dfbd-cb51-41d7-9482-50c382874b10",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "789-8",
+        "display": "Erythrocytes"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/1d475236-6cba-4e52-9b94-af37bb315cd0",
+    "display": "Chadwick Ross"
+  },
+
+  "valueQuantity": {
+    "value": 4.21,
+    "unit": "10*12/L",
+    "system": "http://unitsofmeasure.org",
+    "code": "10*12/L"
+  }
+}

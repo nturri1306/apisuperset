@@ -1,0 +1,49 @@
+[
+  {
+    "resourceType": "Patient",
+    "id": "592738",
+    "meta": {
+      "versionId": "1",
+      "lastUpdated": "2023-11-15T11:07:54.205467Z",
+      "source": "#Hy1SulRJXZxLa9NA"
+    },
+    "text": {
+      "status": "generated",
+      "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><div class=\"hapiHeaderText\">Carniceros <b>LOPEZ </b></div><table class=\"hapiPropertyTable\"><tbody><tr><td>Date of birth</td><td><span>11 September 1991</span></td></tr></tbody></table></div>"
+    },
+    "name": [
+      {
+        "family": "Lopez",
+        "given": [
+          "Carniceros"
+        ]
+      }
+    ],
+    "gender": "male",
+    "birthDate": "1991-09-11"
+  },
+
+  {
+    "resourceType": "Patient",
+    "id": "592739",
+    "meta": {
+      "versionId": "1",
+      "lastUpdated": "2023-11-15T11:07:54.205467Z",
+      "source": "#Hy1SulRJXZxLa9NA"
+    },
+    "text": {
+      "status": "generated",
+      "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><div class=\"hapiHeaderText\">Carniceros <b>LOPEZ </b></div><table class=\"hapiPropertyTable\"><tbody><tr><td>Date of birth</td><td><span>11 September 1991</span></td></tr></tbody></table></div>"
+    },
+    "name": [
+      {
+        "family": "Lopez",
+        "given": [
+          "Carniceros"
+        ]
+      }
+    ],
+    "gender": "male",
+    "birthDate": "1991-09-11"
+  }
+]

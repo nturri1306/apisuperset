@@ -167,7 +167,6 @@ public class RestFhirApi {
 
         List<Object> resources = new ArrayList<>();
 
-
         System.out.println("size:" + bundle.getEntry().size());
 
         for (Bundle.BundleEntryComponent entry : bundle.getEntry()) {

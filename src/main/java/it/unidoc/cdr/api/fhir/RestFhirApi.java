@@ -179,15 +179,11 @@ public class RestFhirApi {
 
                 resources.add(toObservation((Observation) resource));
 
-            }
+            } else if (resource instanceof AllergyIntolerance) {
 
-           else if (resource instanceof AllergyIntolerance) {
+                // resources.add(toAllergy((AllergyIntolerance) resource));
 
-               // resources.add(toAllergy((AllergyIntolerance) resource));
-
-            }
-
-            else
+            } else
                 resources.add(resource);
 
 
@@ -320,16 +316,11 @@ public class RestFhirApi {
 
                 CodeableConcept codeableConcept = (CodeableConcept) source.getValue();
 
-                dest.setValueCodeableConcept(new ArrayList<>());
-
                 for (var coding : codeableConcept.getCoding()) {
 
-                    CustomCoding c= new CustomCoding();
-
-                    c.setCode(coding.getCode());
-                    c.setSystem(coding.getSystem());
-                    c.setDisplay(coding.getDisplay());
-                    dest.getValueCodeableConcept().add(c);
+                    dest.setValueCodeableConceptCode(coding.getCode());
+                    dest.setValueCodeableConceptSystem(coding.getSystem());
+                    dest.setValueCodeableConceptDisplay(coding.getDisplay());
 
                 }
 

@@ -23,7 +23,15 @@ public class CustomObservation {
     @JsonProperty("valueQuantity.system")
     private String system;
 
-    private List<CustomCoding> valueCodeableConcept;
+    @JsonProperty("valueCodeableConcept.system")
+    private String valueCodeableConceptSystem;
+
+    @JsonProperty("valueCodeableConcept.code")
+    private String valueCodeableConceptCode;
+
+    @JsonProperty("valueCodeableConcept.display")
+    private String valueCodeableConceptDisplay;
+
 
 }
 

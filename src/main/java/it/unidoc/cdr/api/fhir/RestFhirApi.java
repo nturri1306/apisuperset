@@ -66,7 +66,6 @@ public class RestFhirApi {
 
         log.info("url:" + SOURCE_SERVER_BASE_URL);
 
-
     }
 
 
@@ -173,10 +172,9 @@ public class RestFhirApi {
 
             var resource = Resource.class.cast(entry.getResource());
 
-
             if (resource instanceof Observation) {
 
-                resources.add(toObservation((Observation) resource));
+                resources.add(CustomObservation.toObservation((Observation) resource));
 
             } else if (resource instanceof AllergyIntolerance) {
 
@@ -184,7 +182,6 @@ public class RestFhirApi {
 
             } else
                 resources.add(resource);
-
 
         }
         return resources;
@@ -293,46 +290,6 @@ public class RestFhirApi {
 
         return extractResourcesFromBundle(bundle);
 
-    }
-
-    private CustomObservation toObservation(Observation source) {
-
-        CustomObservation dest = new CustomObservation();
-
-        try {
-
-            if (source.getValue() != null && source.getValue() instanceof Quantity) {
-
-                dest.setValue(source.getValueQuantity().getValue().toString());
-
-                dest.setSystem(source.getValueQuantity().getSystem());
-
-                dest.setCode(source.getValueQuantity().getCode());
-
-                dest.setUnit(source.getValueQuantity().getUnit());
-
-            } else if (source.getValue() != null && source.getValue() instanceof CodeableConcept) {
-
-                CodeableConcept codeableConcept = (CodeableConcept) source.getValue();
-
-                for (var coding : codeableConcept.getCoding()) {
-
-                    dest.setValueCodeableConceptCode(coding.getCode());
-                    dest.setValueCodeableConceptSystem(coding.getSystem());
-                    dest.setValueCodeableConceptDisplay(coding.getDisplay());
-
-                }
-
-            } else {
-                throw new IllegalArgumentException("value null.");
-            }
-
-        } catch (Exception ex) {
-
-        }
-
-
-        return dest;
     }
 
 

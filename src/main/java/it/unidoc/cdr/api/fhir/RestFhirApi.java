@@ -5,6 +5,7 @@ import ca.uhn.fhir.rest.client.api.IClientInterceptor;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.gclient.UriClientParam;
 import ca.uhn.fhir.rest.server.exceptions.BaseServerResponseException;
+import com.google.gson.Gson;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -172,7 +173,7 @@ public class RestFhirApi {
 
             var resource = Resource.class.cast(entry.getResource());
 
-            if (resource instanceof Observation) {
+            /*if (resource instanceof Observation) {
 
                 resources.add(CustomObservation.toObservation((Observation) resource));
 
@@ -180,7 +181,7 @@ public class RestFhirApi {
 
                 // resources.add(toAllergy((AllergyIntolerance) resource));
 
-            } else
+            } else*/
                 resources.add(resource);
 
         }
@@ -272,10 +273,18 @@ public class RestFhirApi {
 
         List<Object> resourceList = extractResourcesFromBundle(bundle);
 
-        if (resourceList.size() > 0)
+        var ar =  MergeUtil.merge(resourceList);
+
+        String json = new Gson().toJson(ar);
+
+        System.out.println(json);
+
+        return  json;
+
+       /* if (resourceList.size() > 0)
             return Util.toArrayJson(resourceList);
 
-        else return Util.toJson(bundle);
+        else return Util.toJsonResource(bundle);*/
 
     }
 

@@ -23,7 +23,7 @@ public class Util {
 
     private static final Logger log = LoggerFactory.getLogger(Util.class);
 
-    public static String toJson(IBaseResource object) {
+    public static String toJsonResource(IBaseResource object) {
 
         String methodName = "public static String toJson(IBaseResource object)";
         try {
@@ -64,7 +64,7 @@ public class Util {
                     resourceJsonStrings.add(parser.encodeResourceToString((Resource) resource));
 
                 } else {
-                    resourceJsonStrings.add(Util.toJson(resource));
+                    resourceJsonStrings.add(Util.toJsonObject(resource));
                 }
 
             }
@@ -109,7 +109,7 @@ public class Util {
         }
     }
 
-    public static String toJson(Object object) {
+    public static String toJsonObject(Object object) {
 
         String jsonRequest = null;
 

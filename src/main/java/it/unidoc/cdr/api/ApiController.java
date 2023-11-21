@@ -1,15 +1,15 @@
 package it.unidoc.cdr.api;
 
 
+import it.unidoc.cdr.api.fhir.Conf;
 import it.unidoc.cdr.api.fhir.RestFhirApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-
 import org.springframework.http.MediaType;
-
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,11 +31,15 @@ public class ApiController {
      */
 
     private static final Logger log = LoggerFactory.getLogger(ApiController.class);
-    String fhirUrl = "http://172.16.14.191:9080/fhir-server/api/v4/";
-    String fhirUser = "fhiruser";
-    String fhirPwd = "change-password";
+
+  /*  String fhirUser = "fhiruser";
+    String fhirPwd = "change-password";*/
 
     //@GetMapping("/{queryString}")
+
+
+    @Autowired
+    Conf conf;
 
     @GetMapping(value = "/{queryString}", produces = MediaType.APPLICATION_JSON_VALUE)
     //@ResponseBody
@@ -44,7 +48,7 @@ public class ApiController {
             @RequestParam Map<String, String> queryParams) throws IOException {
 
 
-        var restFhirApi = new RestFhirApi(fhirUrl, fhirUser, fhirPwd);
+        var restFhirApi = new RestFhirApi(conf.getFhirBaseUrl(), conf.getFhirUsername(), conf.getFhirPassword());
 
 
         final String[] urlParams = {""};
@@ -59,7 +63,7 @@ public class ApiController {
 
         );
 
-        String url = fhirUrl + queryString;
+        String url = conf.getFhirBaseUrl() + "/" + queryString;
 
         if (urlParams[0].length() > 1)
             url += "?" + urlParams[0].substring(1);
@@ -70,7 +74,7 @@ public class ApiController {
 
 
         File tempDir = new File(System.getProperty("java.io.tmpdir"));
-        File tempFile = new File(tempDir, UUID.randomUUID()+".json");
+        File tempFile = new File(tempDir, UUID.randomUUID() + ".json");
 
         try (FileWriter fileWriter = new FileWriter(tempFile)) {
             fileWriter.write(jsonContent);
@@ -96,7 +100,6 @@ public class ApiController {
             return StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
         }
     }*/
-
 
 
     @GetMapping(value = "/json", produces = MediaType.APPLICATION_JSON_VALUE)

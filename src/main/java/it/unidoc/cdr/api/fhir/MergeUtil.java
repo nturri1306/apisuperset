@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+
 import java.util.*;
 
 public class MergeUtil {
@@ -24,15 +25,6 @@ public class MergeUtil {
 
             arrayList.add(flattenedMap);
 
-            // Stampa il risultato appiattito
-         /*   System.out.println(flattenedMap);
-
-            Type type = new TypeToken<HashMap<String, Object>>() {
-            }.getType();
-
-            HashMap<String, Object> hashMap = new Gson().fromJson(jsonString, type);
-
-            arrayList.add(hashMap);*/
         }
 
 
@@ -52,10 +44,6 @@ public class MergeUtil {
                 }
             }
 
-
-        System.out.println(arrayList);
-
-
         return arrayList;
 
     }
@@ -63,13 +51,9 @@ public class MergeUtil {
 
     private static void mergeMap(Map<String, Object> map1, Map<String, Object> map2) {
         for (String key : map1.keySet()) {
-
             if (!map2.containsKey(key)) {
-
                 map2.put(key, "");
-
             }
-
         }
     }
 

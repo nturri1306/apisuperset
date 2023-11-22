@@ -6,7 +6,6 @@ import it.unidoc.cdr.api.fhir.RestFhirApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -23,7 +22,7 @@ import java.util.UUID;
 
 
 @RestController
-@RequestMapping("/api/example")
+@RequestMapping("/api/fhir")
 public class ApiController {
 
     /*
@@ -32,86 +31,73 @@ public class ApiController {
 
     private static final Logger log = LoggerFactory.getLogger(ApiController.class);
 
-  /*  String fhirUser = "fhiruser";
-    String fhirPwd = "change-password";*/
-
-    //@GetMapping("/{queryString}")
-
-
     @Autowired
     Conf conf;
 
     @GetMapping(value = "/{queryString}", produces = MediaType.APPLICATION_JSON_VALUE)
-    //@ResponseBody
-    public String handleExampleRequest(
+    public String handleRequest(
             @PathVariable String queryString,
             @RequestParam Map<String, String> queryParams) throws IOException {
 
 
-        var restFhirApi = new RestFhirApi(conf.getFhirBaseUrl(), conf.getFhirUsername(), conf.getFhirPassword());
+        String method = "String handleRequest(" +
+                "@PathVariable String queryString," +
+                "@RequestParam Map<String, String> queryParams)";
+
+        log.info("--- BEGIN "+method);
+
+        try {
 
 
-        final String[] urlParams = {""};
-
-        queryParams.forEach((key, value) ->
-                {
-
-                    urlParams[0] += "&" + key + "=" + value;
-
-                    log.info("Parametro: " + key + ", Valore: " + value);
-                }
-
-        );
-
-        String url = conf.getFhirBaseUrl() + "/" + queryString;
-
-        if (urlParams[0].length() > 1)
-            url += "?" + urlParams[0].substring(1);
-
-        log.info(url);
-
-        String jsonContent = restFhirApi.getByFullUrl(url);
+            var restFhirApi = new RestFhirApi(conf.getFhirBaseUrl(), conf.getFhirUsername(), conf.getFhirPassword());
 
 
-        File tempDir = new File(System.getProperty("java.io.tmpdir"));
-        File tempFile = new File(tempDir, UUID.randomUUID() + ".json");
+            final String[] urlParams = {""};
 
-        try (FileWriter fileWriter = new FileWriter(tempFile)) {
-            fileWriter.write(jsonContent);
+            queryParams.forEach((key, value) ->
+                    {
+
+                        urlParams[0] += "&" + key + "=" + value;
+
+                        log.info("Parametro: " + key + ", Valore: " + value);
+                    }
+
+            );
+
+            String url = conf.getFhirBaseUrl() + "/" + queryString;
+
+            if (urlParams[0].length() > 1)
+                url += "?" + urlParams[0].substring(1);
+
+            log.info(url);
+
+            String jsonContent = restFhirApi.getByFullUrl(url);
+
+
+            File tempDir = new File(System.getProperty("java.io.tmpdir"));
+            File tempFile = new File(tempDir, UUID.randomUUID() + ".json");
+
+            try (FileWriter fileWriter = new FileWriter(tempFile)) {
+                fileWriter.write(jsonContent);
+            }
+
+            Resource resource = new FileSystemResource(tempFile);
+
+            try (InputStream inputStream = resource.getInputStream()) {
+                return StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
+            }
+
+
+        }
+        catch (Exception ex)
+        {
+            return  ex.getMessage();
+
+        }
+        finally {
+            log.info("--- END " + method);
         }
 
-        Resource resource = new FileSystemResource(tempFile);
-
-        try (InputStream inputStream = resource.getInputStream()) {
-            return StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
-        }
-
-    }
-
-
-  /*  @GetMapping(value = "/json", produces = MediaType.APPLICATION_JSON_VALUE)
-
-    public String getPatientJson() throws IOException {
-
-        Resource resource = new ClassPathResource("static/patient.json");
-
-        try (InputStream inputStream = resource.getInputStream()) {
-
-            return StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
-        }
-    }*/
-
-
-    @GetMapping(value = "/json", produces = MediaType.APPLICATION_JSON_VALUE)
-
-    public String getPatientJson() throws IOException {
-
-        Resource resource = new ClassPathResource("static/bundle.json");
-
-        try (InputStream inputStream = resource.getInputStream()) {
-
-            return StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
-        }
     }
 
 }

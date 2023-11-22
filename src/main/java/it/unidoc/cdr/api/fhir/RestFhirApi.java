@@ -277,8 +277,6 @@ public class RestFhirApi {
 
         String json = new Gson().toJson(ar);
 
-        System.out.println(json);
-
         return  json;
 
        /* if (resourceList.size() > 0)

@@ -27,7 +27,7 @@ public class Util {
 
         String methodName = "public static String toJson(IBaseResource object)";
         try {
-            log.info("Begin " + methodName);
+          //  log.info("Begin " + methodName);
 
             FhirContext ctx = FhirContext.forR4();
 
@@ -41,7 +41,7 @@ public class Util {
             log.error("error: " + ex.getMessage());
             return "";
         } finally {
-            log.info("End " + methodName);
+            //log.info("End " + methodName);
         }
 
     }

@@ -6,19 +6,11 @@ import it.unidoc.cdr.api.fhir.RestFhirApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
-import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
-import java.util.UUID;
 
 
 @RestController
@@ -44,7 +36,7 @@ public class ApiController {
                 "@PathVariable String queryString," +
                 "@RequestParam Map<String, String> queryParams)";
 
-        log.info("--- BEGIN "+method);
+        log.info("--- BEGIN " + method);
 
         try {
 
@@ -73,8 +65,9 @@ public class ApiController {
 
             String jsonContent = restFhirApi.getByFullUrl(url);
 
+            return jsonContent;
 
-            File tempDir = new File(System.getProperty("java.io.tmpdir"));
+           /* File tempDir = new File(System.getProperty("java.io.tmpdir"));
             File tempFile = new File(tempDir, UUID.randomUUID() + ".json");
 
             try (FileWriter fileWriter = new FileWriter(tempFile)) {
@@ -85,16 +78,13 @@ public class ApiController {
 
             try (InputStream inputStream = resource.getInputStream()) {
                 return StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
-            }
+            }*/
 
 
-        }
-        catch (Exception ex)
-        {
-            return  ex.getMessage();
+        } catch (Exception ex) {
+            return RestFhirApi.handleExceptionAndLog(ex);
 
-        }
-        finally {
+        } finally {
             log.info("--- END " + method);
         }
 

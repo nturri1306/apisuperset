@@ -3,7 +3,6 @@ package it.unidoc.cdr.api.fhir;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IClientInterceptor;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
-import ca.uhn.fhir.rest.gclient.UriClientParam;
 import ca.uhn.fhir.rest.server.exceptions.BaseServerResponseException;
 import com.google.gson.Gson;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
@@ -17,10 +16,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.security.cert.X509Certificate;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -67,100 +64,6 @@ public class RestFhirApi {
 
         log.info("url:" + SOURCE_SERVER_BASE_URL);
 
-    }
-
-
-    public List<Resource> getHistoryById(String id, Class<? extends Resource> resourceType) {
-
-        String methodName = "public List<Resource>  getHistoryById(String id, Class<? extends Resource> resourceType) ";
-
-        try {
-
-            List<Resource> ResourceList = new ArrayList<>();
-
-            log.info("Begin " + methodName);
-            log.info("id: " + id);
-            log.info("resource: " + resourceType.getSimpleName());
-
-            IdType idType = new IdType(resourceType.getSimpleName(), id);
-
-            var bundle = sourceClient.history().onInstance(idType).returnBundle(Bundle.class).execute();
-
-            for (Bundle.BundleEntryComponent entry : bundle.getEntry()) {
-                Resource Resource = entry.getResource();
-                //System.out.println("history id: " + entry.getResource().getId());
-                ResourceList.add(Resource);
-            }
-
-            return ResourceList;
-        } catch (Exception e) {
-            handleExceptionAndLog(e);
-            return null;
-        } finally {
-            log.info("End " + methodName);
-        }
-    }
-
-    public boolean deleteResourceById(String id, Class<? extends Resource> resourceType) {
-        String methodName = "public boolean deleteResourceById(String id, Class<? extends Resource> resourceType)";
-
-        try {
-
-            log.info("Begin " + methodName);
-            log.info("id: " + id);
-            log.info("resourceType: " + resourceType.getSimpleName());
-
-            IdType idType = new IdType(resourceType.getSimpleName(), id);
-            sourceClient.delete().resourceById(idType).execute();
-            return true;
-        } catch (Exception e) {
-            handleExceptionAndLog(e);
-            return false;
-        } finally {
-            log.info("End " + methodName);
-        }
-    }
-
-    public Resource getByUrl(String url, Resource resourceType) {
-
-        String methodName = "Resource getByUrl(String url,Resource resourceType)";
-
-        try {
-
-            log.info("Begin " + methodName);
-            log.info("resourceType: " + resourceType.getClass());
-            log.info("url: " + url);
-
-            Bundle bundle = sourceClient.search().forResource(resourceType.getClass()).where(new UriClientParam(FilterNames.URL).matches().value(url)).returnBundle(Bundle.class).execute();
-
-            var resourceList = extractResourcesFromBundle(bundle, resourceType.getClass());
-
-            log.info("elements: " + resourceList.size());
-
-            if (resourceList.size() > 0) return resourceList.get(0);
-
-            else return null;
-
-        } catch (Exception e) {
-            handleExceptionAndLog(e);
-            return null;
-
-        } finally {
-            log.info("End " + methodName);
-        }
-
-
-    }
-
-
-    private <T> List<T> extractResourcesFromBundle(Bundle bundle, Class<T> resourceType) {
-        List<T> resources = new ArrayList<>();
-        for (Bundle.BundleEntryComponent entry : bundle.getEntry()) {
-            if (entry.getResource().getClass().equals(resourceType)) {
-                resources.add(resourceType.cast(entry.getResource()));
-            }
-        }
-        return resources;
     }
 
     public List<Object> extractResourcesFromBundle(Bundle bundle) {
@@ -222,34 +125,8 @@ public class RestFhirApi {
         }
     }
 
-    public String formatDate(String inputDate) {
-        if (inputDate == null || inputDate.length() != 8) {
-            throw new IllegalArgumentException("Input date must be in the format 'yyyyMMdd' and should not be null.");
-        }
 
-        String year = inputDate.substring(0, 4);
-        String month = inputDate.substring(4, 6);
-        String day = inputDate.substring(6, 8);
-
-        String formattedDate = year + "-" + month + "-" + day;
-        return formattedDate;
-    }
-
-    public Date parseDate(String dateStr, String format) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
-        try {
-            return dateFormat.parse(dateStr);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return new Date();
-        }
-    }
-
-    public boolean isNotBlank(String str) {
-        return str != null && !str.isEmpty();
-    }
-
-    private String handleExceptionAndLog(Exception e) {
+    public static String handleExceptionAndLog(Exception e) {
         String msgError = "";
         e.printStackTrace();
         log.error(e.getMessage());

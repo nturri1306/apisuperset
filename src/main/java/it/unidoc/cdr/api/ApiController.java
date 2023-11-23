@@ -40,9 +40,7 @@ public class ApiController {
 
         try {
 
-
             var restFhirApi = new RestFhirApi(conf.getFhirBaseUrl(), conf.getFhirUsername(), conf.getFhirPassword());
-
 
             final String[] urlParams = {""};
 
@@ -53,7 +51,6 @@ public class ApiController {
 
                         log.info("Parametro: " + key + ", Valore: " + value);
                     }
-
             );
 
             String url = conf.getFhirBaseUrl() + "/" + queryString;

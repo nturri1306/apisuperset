@@ -1,9 +1,6 @@
 package it.unidoc.cdr.api.fhir;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import com.google.gson.*;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 
 import java.util.*;
@@ -59,23 +56,47 @@ public class MergeUtil {
 
 
     private static Map<String, Object> flattenJson(JsonObject json) {
-        Map<String, Object> flattenedMap = new HashMap<>();
+        // Map<String, Object> flattenedMap = new HashMap<>();
+        Map<String, Object> flattenedMap = new TreeMap<>();
         flattenJsonHelper(flattenedMap, "", json);
         return flattenedMap;
     }
 
     private static void flattenJsonHelper(Map<String, Object> flattenedMap, String prefix, JsonElement jsonElement) {
+
+        if (jsonElement.isJsonArray()) {
+            JsonArray array = jsonElement.getAsJsonArray();
+
+            for (int i = 0; i < array.size(); i++) {
+
+                String newKey = "";
+
+                if (i >= 0)
+
+                    newKey = prefix.isEmpty() ? "item" + i : prefix + ".item" + i;
+
+                else {
+                    newKey = prefix.isEmpty() ? "item" + i : prefix;
+                }
+
+                flattenJsonHelper(flattenedMap, newKey, array.get(i));
+            }
+        }
+
         if (jsonElement.isJsonObject()) {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
             Set<Map.Entry<String, JsonElement>> entrySet = jsonObject.entrySet();
 
             for (Map.Entry<String, JsonElement> entry : entrySet) {
                 String newKey = prefix.isEmpty() ? entry.getKey() : prefix + "." + entry.getKey();
+
                 flattenJsonHelper(flattenedMap, newKey, entry.getValue());
             }
         } else if (jsonElement.isJsonPrimitive()) {
             JsonPrimitive jsonPrimitive = jsonElement.getAsJsonPrimitive();
             flattenedMap.put(prefix, jsonPrimitive.isString() ? jsonPrimitive.getAsString() : jsonPrimitive);
         }
+
+
     }
 }

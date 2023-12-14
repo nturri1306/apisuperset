@@ -1,5 +1,6 @@
 package it.unidoc.cdr.api.fhir;
 
+import ca.uhn.fhir.context.FhirContext;
 import com.google.gson.*;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 
@@ -11,9 +12,13 @@ public class MergeUtil {
 
         List<Map<String, Object>> arrayList = new ArrayList();
 
+        var parser = FhirContext.forR4().newJsonParser();
+
         for (var r : resourceList) {
 
-            var jsonString = Util.toJsonResource((IBaseResource) r);
+            // var jsonString = Util.toJsonResource((IBaseResource) r);
+
+            var jsonString = parser.encodeResourceToString((IBaseResource) r);
 
             Gson gson = new Gson();
             JsonObject json = gson.fromJson(jsonString, JsonObject.class);
